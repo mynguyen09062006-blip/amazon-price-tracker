@@ -1,34 +1,47 @@
 # Amazon Price Tracker (Web Scraping)
 
-A small Python tool that scrapes a product's title and price from Amazon on a schedule and logs each reading to a CSV file. Over time, this builds a price-history dataset that can be used for price monitoring or deal alerts.
+## What this project does
 
-## What it does
+A small Python script that visits an Amazon product page, reads the product title and price, and saves them with today's date to a CSV file. It can run on a loop, so over time it builds a price history for that product.
 
-1. Sends an HTTP request with browser headers to an Amazon product page (`requests`)
-2. Parses the product title and price from the HTML (`BeautifulSoup`)
-3. Appends `Title, Price, Date` to `AmazonProduct.csv`
-4. Repeats on a timer (`time.sleep`) so the price is tracked automatically
-5. Loads the CSV with `pandas` for a quick check of the history
+## Why it is useful
 
-## Business use case
+Price history helps shoppers buy at the right time and helps online sellers keep an eye on competitor prices. This was also my first web-scraping project, where I practised working with HTML, requests and CSV files.
 
-E-commerce teams track competitor prices in the same way to adjust their own pricing and promotions. Shoppers can also use it to buy when the price drops.
+## How I processed the data
 
-## Tools
+**1. Requesting the page**
+- Sent a request to the product URL with `requests`, adding browser-like headers (User-Agent, Accept-Language, Referer) so Amazon returns the normal page.
 
-Python · requests · BeautifulSoup4 · csv · pandas
+**2. Parsing the HTML**
+- Parsed the page with BeautifulSoup and found the title by its element id (`productTitle`) and the price by its class.
 
-## How to run
+**3. Cleaning the values**
+- Removed extra spaces and line breaks with `strip()`, and trimmed the price text to keep only the price.
+- Added the current date with `datetime.date.today()`.
 
-```bash
-pip install requests beautifulsoup4 pandas
-jupyter notebook WebScrapping.ipynb
-```
+**4. Saving to CSV**
+- Created `AmazonProduct.csv` with the header `Title, Price, Date`, then appended a new row on every run.
 
-Replace the `URL` in the notebook with any Amazon product link. Amazon may block frequent requests, so keep the interval reasonable.
+**5. Automating**
+- Wrapped the steps in a `check_price()` function and ran it in a loop with `time.sleep()`.
+- Loaded the CSV back with pandas to check the collected data.
 
-## Next steps
+## Getting started
 
-- Clean the price into a numeric column and chart the price over time
-- Send an email alert (`smtplib`) when the price falls below a target
-- Track several products at once
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/mynguyen09062006-blip/WebScrapping-v1-.git
+   cd WebScrapping-v1-
+   ```
+2. Install the libraries:
+   ```bash
+   pip install requests beautifulsoup4 pandas jupyter
+   ```
+3. Open `WebScrapping.ipynb`, replace `URL` with the Amazon product you want to track, and run the cells. The CSV is saved to your Desktop.
+
+> Amazon may block requests that are sent too often, so keep a reasonable interval between runs.
+
+## Getting help
+
+If you have a question or find a problem, please open an issue in this repository or contact me on [LinkedIn](https://www.linkedin.com/in/my-nguyen-anh/) or at mynguyen09062006@gmail.com.
